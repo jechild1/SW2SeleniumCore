@@ -58,9 +58,14 @@ public abstract class TestConfig {
 	// Holds a soft asserter object.
 	public static EnhancedSoftAssert softAsserter;
 	
-	protected static String DEFAULT_FILE_PATH_FOR_SAVING = "C:\\Users\\jesse\\git\\sw2-qa-automation\\sw2QA\\Application Report Files\\";
-	protected static String DEFAULT_FILE_PATH_FOR_SCREENSHOTS = "C:\\Users\\jesse\\git\\sw2-qa-automation\\sw2QA\\Screenshots\\";
-
+	/*
+	 * For this to work correctly, you must set up an a system variable in Windows
+	 * for the locations in which you would like to save.
+	 */
+//	protected static String DEFAULT_FILE_PATH_FOR_SAVING = "C:\\Users\\jesse\\git\\sw2-qa-automation\\sw2QA\\Application Report Files\\";
+	protected static String DEFAULT_FILE_PATH_FOR_SAVING = System.getenv("Eclipse-FilePathForSaving");
+//	protected static String DEFAULT_FILE_PATH_FOR_SCREENSHOTS = "C:\\Users\\jesse\\git\\sw2-qa-automation\\sw2QA\\Screenshots\\";
+	protected static String DEFAULT_FILE_PATH_FOR_SCREENSHOTS = System.getenv("Eclipse-ScreenshotsLocation");
 	/**
 	 * Abstract config constructor
 	 * 
