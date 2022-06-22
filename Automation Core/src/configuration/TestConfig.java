@@ -23,9 +23,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 
-import com.devskiller.jfairy.Fairy;
-import com.devskiller.jfairy.producer.text.TextProducer;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import utilities.AutomationHelper;
 import utilities.ExcelDataConfig;
@@ -42,10 +39,6 @@ public abstract class TestConfig {
 	private static String baseUrl = "";
 	private static String currentFrame = "";
 
-	// Mail Trap user name / pass
-	protected static String mailTrapEmailAddress = "mmurray@sw2.net";
-	protected static String mailTrapEmailPassword = "Hw8MXPskqnKLXxU";
-
 	// The main webdriver used throughout a given project
 	protected static WebDriver driver;
 
@@ -57,7 +50,7 @@ public abstract class TestConfig {
 
 	// Holds a soft asserter object.
 	public static EnhancedSoftAssert softAsserter;
-	
+
 	/*
 	 * For this to work correctly, you must set up an a system variable in Windows
 	 * for the locations in which you would like to save.
@@ -66,6 +59,7 @@ public abstract class TestConfig {
 	protected static String DEFAULT_FILE_PATH_FOR_SAVING = System.getenv("Eclipse-FilePathForSaving");
 //	protected static String DEFAULT_FILE_PATH_FOR_SCREENSHOTS = "C:\\Users\\jesse\\git\\sw2-qa-automation\\sw2QA\\Screenshots\\";
 	protected static String DEFAULT_FILE_PATH_FOR_SCREENSHOTS = System.getenv("Eclipse-ScreenshotsLocation");
+
 	/**
 	 * Abstract config constructor
 	 * 
@@ -116,24 +110,17 @@ public abstract class TestConfig {
 	}
 
 	/**
-	 * Closes the given page
-	 */
-	public void closePage() {
-		driver.close();
-	}
-
-	/**
 	 * This methods instantiates a WebDriver for use in the application.
 	 * 
 	 * @return WebDriver
 	 */
 	private WebDriver setDriver() {
 
-		// get user-specified browser from test suite xml file
+		// Get user-specified browser from test suite xml file
 		String selectedBrowser = getSelectedBrowser();
 
-		// default to edge if not user selected
-		selectedBrowser = selectedBrowser != null ? selectedBrowser : "chrome";
+		// Default to browser in string if not user selected
+		selectedBrowser = selectedBrowser != null ? selectedBrowser : "Chrome";
 
 		switch (selectedBrowser.toLowerCase()) {
 		case "ie":
@@ -147,65 +134,53 @@ public abstract class TestConfig {
 			break;
 
 		case "edge":
-			
+
 			WebDriverManager.edgedriver().setup();
 			EdgeOptions edgeOptions = new EdgeOptions();
-	
+
 			HashMap<String, Object> edgePrefs = new HashMap<>();
-			edgePrefs.put("plugins.always_open_pdf_externally", true); //Forces PDF to NOT open in its own window
+			edgePrefs.put("plugins.always_open_pdf_externally", true); // Forces PDF to NOT open in its own window
 			edgePrefs.put("download.default_directory", DEFAULT_FILE_PATH_FOR_SAVING); // Specifies download directory
-			
-			
+
 			edgeOptions.setExperimentalOption("prefs", edgePrefs);
-	
+
 			driver = new EdgeDriver(edgeOptions);
 
-//			WebDriverManager.edgedriver().setup();
-//			driver = new EdgeDriver();
 			break;
 
 		case "chrome":
-			
+
 			WebDriverManager.chromedriver().setup();
 			ChromeOptions chromeOptions = new ChromeOptions();
 
 			HashMap<String, Object> chromePrefs = new HashMap<>();
-			chromePrefs.put("plugins.always_open_pdf_externally", true); //Forces PDF to NOT open in its own window
+			chromePrefs.put("plugins.always_open_pdf_externally", true); // Forces PDF to NOT open in its own window
 			chromePrefs.put("download.default_directory", DEFAULT_FILE_PATH_FOR_SAVING); // Specifies download directory
-			
-			
+
 			chromeOptions.setExperimentalOption("prefs", chromePrefs);
-			
+
 			driver = new ChromeDriver(chromeOptions);
-			
-//			WebDriverManager.chromedriver().setup();
-//				ChromeOptions chromeOptions = new ChromeOptions();
-//				
-//				HashMap<String, Object> prefs = new HashMap<>();
-//				prefs.put("plugins.aways_open_pdf_externally", true);
-//				prefs.put("download.default_directory", "C:\\Users\\jesse\\git\\sw2-qa-automation\\sw2QA\\test-output\\Downloaded Files");
-//				prefs.put("download.prompt_for_download", false);
-//				prefs.put("download.directory_upgrade", true);
-//				prefs.put("safebrowsing.enabled", true);
-//
-//								chromeOptions.setExperimentalOption("prefs", prefs);
-//				
-//				driver = new ChromeDriver(chromeOptions);
+
 			break;
 
 		case "firefox":
 		default:
-			
+
 			WebDriverManager.firefoxdriver().setup();
-			
+
 			FirefoxOptions firefoxOptions = new FirefoxOptions();
 			FirefoxProfile firefoxProfile = new FirefoxProfile();
-						
-			firefoxProfile.setPreference("browser.download.folderList",2); //Use for the default download directory the last folder specified for a download
-			firefoxProfile.setPreference("browser.download.dir", DEFAULT_FILE_PATH_FOR_SAVING); //Set the last directory used for saving a file from the "What should (browser) do with this file?" dialog.
-			firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/pdf"); //list of MIME types to save to disk without asking what to use to open the file
-			firefoxProfile.setPreference("pdfjs.disabled", true);  // disable the built-in PDF viewer
-			
+
+			// Use for the default download directory the last folder specified for a download
+			firefoxProfile.setPreference("browser.download.folderList", 2);
+			// Set the last directory used for saving a file from the "What should (browser) do with this file?" dialog.
+			firefoxProfile.setPreference("browser.download.dir", DEFAULT_FILE_PATH_FOR_SAVING); 
+			// List of MIME types to save to disk without asking what to use to open the file
+			firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "application/pdf"); 
+			// Disable the built-in PDF viewer
+			firefoxProfile.setPreference("pdfjs.disabled", true); 
+
+			//Geo-location
 			firefoxProfile.setPreference("geo.enabled", true);
 			firefoxProfile.setPreference("geo.provider.use_corelocation", true);
 			firefoxProfile.setPreference("geo.prompt.testing", true);
@@ -213,27 +188,12 @@ public abstract class TestConfig {
 			firefoxProfile.setPreference("geo.wifi.uri",
 					"data:application/json , { \"status\": \"OK\", \"accuracy\": 100.0, \"location\": { \"lat\": 27.401680, \"lng\": -82.468524, \"latitude\": 27.401680, \"longitude\": -82.468524, \"accuracy\": 100.0 } }");
 
-	
-			
 			firefoxOptions.setProfile(firefoxProfile);
-			
+
 			driver = new FirefoxDriver(firefoxOptions);
 
-//			// Profiles and options are meant to provide a zip code to the browser so that
-//			// we are not prompted with geo-location popups.
-//			FirefoxProfile profile = new FirefoxProfile();
-//			profile.setPreference("geo.enabled", true);
-//			profile.setPreference("geo.provider.use_corelocation", true);
-//			profile.setPreference("geo.prompt.testing", true);
-//			profile.setPreference("geo.prompt.testing.allow", true);
-//			profile.setPreference("geo.wifi.uri",
-//					"data:application/json , { \"status\": \"OK\", \"accuracy\": 100.0, \"location\": { \"lat\": 27.401680, \"lng\": -82.468524, \"latitude\": 27.401680, \"longitude\": -82.468524, \"accuracy\": 100.0 } }");
-//
-//			FirefoxOptions ffoptions = new FirefoxOptions().setProfile(profile);
-//
-//			WebDriverManager.firefoxdriver().setup();
-//			driver = new FirefoxDriver(ffoptions);
 			break;
+
 		}
 
 		return driver;
@@ -289,7 +249,7 @@ public abstract class TestConfig {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeoutLengthInSeconds));
 
 	}
-	
+
 	/**
 	 * Sets the length of time before timing out when looking for an object on the
 	 * page. This method uses Milliseconds
@@ -420,34 +380,6 @@ public abstract class TestConfig {
 	}
 
 	/**
-	 * Returns browser alert message
-	 * 
-	 * @return String
-	 */
-	public String readAlert() {
-		AutomationHelper.printMethodName();
-		String alert = setDriverToAlert().getText();
-		setDriverToDefaultContent();
-		return alert;
-	}
-
-	/**
-	 * Generates a random paragraph based on size constraint and sentence count
-	 * 
-	 * @param stringSize    - max char count of string
-	 * @param sentenceCount - max number of sentences to generate
-	 * @return String
-	 */
-	public String getRandomText(int stringSize, int sentenceCount) {
-		// Create generic text helper
-		TextProducer tp = Fairy.create().textProducer();
-
-		String paragraph = stringSize > 1 ? tp.limitedTo(stringSize - 1).paragraph(sentenceCount) : "";
-
-		return paragraph + tp.randomString(1);
-	}
-
-	/**
 	 * Returns a boolean status as to if the element exists or not.
 	 * 
 	 * @param locator
@@ -480,8 +412,8 @@ public abstract class TestConfig {
 
 		}
 
-		//Removed the  rowCount + 1
-		return roleList.get(AutomationHelper.generateRandomInteger(1, rowCount-1));
+		// Removed the rowCount + 1
+		return roleList.get(AutomationHelper.generateRandomInteger(1, rowCount - 1));
 
 	}
 
