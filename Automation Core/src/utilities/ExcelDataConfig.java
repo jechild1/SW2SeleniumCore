@@ -150,7 +150,7 @@ public class ExcelDataConfig {
 		// Null Pointer Exception
 		if (cellData != null) {
 
-			CellType type = cellData.getCellTypeEnum();
+			CellType type = cellData.getCellType();
 
 			if (type == CellType.STRING) {
 				cellValue = cellData.getStringCellValue();

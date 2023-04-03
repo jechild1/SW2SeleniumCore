@@ -2,9 +2,7 @@ package configuration;
 
 import java.io.File;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -278,10 +276,6 @@ public abstract class TestConfig {
 		driver.get(baseUrl);
 	}
 
-	// Dataset for use
-	// TODO: this needs to be refactored to be configurable
-	// private static String masterDataSets = "dataSets\\masterDataSets\\";
-
 	private static String localDataSets = "dataSets\\localDataSets\\";
 
 	/**
@@ -388,33 +382,4 @@ public abstract class TestConfig {
 	public boolean isWebElementPresent(By locator) {
 		return !driver.findElements(locator).isEmpty();
 	}
-
-	/**
-	 * Method to generate a random user role for use for logging in as a different
-	 * user.
-	 * 
-	 * @return String
-	 */
-	public String generateRandomUserRole() {
-
-		List<String> roleList = new ArrayList<String>();
-
-		// Get a list of roles from the users datasheet.
-		ExcelDataConfig usersFile = getExcelFile("users.xlsx", "AutomationUsers");
-
-		int rowCount = usersFile.getRowCount();
-		int columnIndex = usersFile.getColumnIndex("Role");
-
-		// By starting at i = 1, we eliminate the header
-		for (int i = 1; i <= rowCount; i++) {
-
-			roleList.add(usersFile.getData(i, columnIndex));
-
-		}
-
-		// Removed the rowCount + 1
-		return roleList.get(AutomationHelper.generateRandomInteger(1, rowCount - 1));
-
-	}
-
 }

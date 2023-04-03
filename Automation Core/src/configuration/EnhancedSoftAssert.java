@@ -8,7 +8,7 @@ import org.testng.asserts.SoftAssert;
 /**
  * Class to extend "SoftAssert" for enhanced logging.
  * 
- * @author scott.brazelton
+ * @author Jesse Childress
  *
  */
 public class EnhancedSoftAssert extends SoftAssert {
@@ -33,18 +33,6 @@ public class EnhancedSoftAssert extends SoftAssert {
 
 		super.onAssertSuccess(assertCommand);
 	}
-
-//	/**
-//	 * Enhanced onAssertFailure to allow reporter logging
-//	 * 
-//	 * {@inheritDoc}
-//	 * 
-//	 */
-//	@Override
-//	public void onAssertFailure(IAssert<?> assertCommand) {
-//
-//		super.onAssertFailure(assertCommand);
-//	}
 
 	/**
 	 * Enhanced onAssertFailure to allow reporter logging
